@@ -4,6 +4,7 @@ import com.example.learnhub.dto.UserDTO;
 import com.example.learnhub.exceptions.UserNotFoundException;
 import com.example.learnhub.model.User;
 import com.example.learnhub.repository.UserRepository;
+import com.example.learnhub.utils.PasswordUtils;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class UserService {
     public void registerUser(UserDTO userDto) {
 
         User user = modelMapper.map(userDto, User.class);
+
+        user.setPassword(PasswordUtils.encrypt(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -41,6 +44,10 @@ public class UserService {
 
     public Optional<User> findUserById(Long id) {
         return userRepository.findById(id);
+    }
+
+    public Optional<UserDTO> findUserDtoById(Long id) {
+        return userRepository.findById(id).map(User::toDto);
     }
 
     public List<UserDTO> findAllUsers(Pageable pageable) {

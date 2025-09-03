@@ -6,6 +6,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.example.learnhub.services.UserService;
 
@@ -33,6 +35,12 @@ public class UserController {
     @GetMapping(path = "/listUsers")
     public ResponseEntity<?> listUsers(Pageable pageable) {
         return new ResponseEntity<>(userService.findAllUsers(pageable), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/findUserbyId/{id}")
+    public ResponseEntity<?> findUserById(@PathVariable Long id,
+                                          @AuthenticationPrincipal UserDetails userDetails) {
+        return new ResponseEntity<>(userService.findUserDtoById(id), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/deleteUser/{id}")

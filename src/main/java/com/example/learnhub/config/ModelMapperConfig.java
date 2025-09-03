@@ -15,7 +15,10 @@ public class ModelMapperConfig {
 
         //Skip the creation date of the User entity
         mapper.typeMap(User.class, UserDTO.class)
-                .addMappings(m -> m.skip(UserDTO::setCreatedAt));
+                .addMappings(m -> {
+                    m.skip(UserDTO::setCreatedAt);
+                    m.skip(UserDTO::setPassword);
+                });
 
         return mapper;
     }
